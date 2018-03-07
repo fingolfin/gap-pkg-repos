@@ -17,14 +17,8 @@ import requests
 import os
 from subprocess import call
 
-print("Fetching repository list from GitHub...")
-r = requests.get('https://api.github.com/orgs/gap-packages/repos?per_page=200')
-j = r.json();
-repos = {item['name']: item['clone_url'] for item in j}
-
-skip = frozenset([
-    "gap-packages.github.io",   # not a package
-    ])
+# all known repositories
+repos = dict()
 
 # add some repos not in the gap-packages org
 repos['ArangoDBInterface'] = "https://github.com/homalg-project/ArangoDBInterface"
@@ -39,6 +33,26 @@ repos['irredsol'] = "https://github.com/bh11/irredsol"
 repos['matgrp'] = "https://github.com/hulpke/matgrp"
 repos['simpcomp'] = "https://github.com/simpcomp-team/simpcomp"
 repos['transgrp'] = "https://github.com/hulpke/transgrp"
+
+
+# repos to skip in the gap-packages org
+skip = frozenset([
+    "gap-packages.github.io",   # not a package
+    ])
+
+print("Fetching repository list from GitHub...")
+url = 'https://api.github.com/orgs/gap-packages/repos?per_page=100'
+while True:
+    r = requests.get(url)
+    j = r.json();
+    new_repos = {item['name']: item['clone_url'] for item in j}
+    repos.update(new_repos)
+    if "next" in r.links:
+        print("Fetching more...")
+        url = r.links["next"]["url"]
+    else:
+        break
+
 
 for repo_name in sorted(repos):
     if repo_name in skip:
