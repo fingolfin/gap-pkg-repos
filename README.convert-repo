@@ -32,8 +32,10 @@ git filter-branch -f --tree-filter 'find -E . -type f -regex ".*\.(xml|g|gz|gd|g
 
 ## Remove CVS leftovers
 
-find . -type f | fgrep -v .git | xargs sed -i -e '/\$Id/d'
+git ls-files | xargs sed -i -e '/\$Id/d'
+git ls-files | xargs sed -i -e '/^Revision\.(/d'
 git commit -a -m "Remove CVS leftovers" 
+
 
 ## change line endings
 
