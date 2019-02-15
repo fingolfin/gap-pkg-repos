@@ -38,6 +38,7 @@ repos['transgrp'] = "https://github.com/hulpke/transgrp"
 # repos to skip in the gap-packages org
 skip = frozenset([
     "gap-packages.github.io",   # not a package
+    "recogbase",   # retracted
     ])
 
 print("Fetching repository list from GitHub...")
