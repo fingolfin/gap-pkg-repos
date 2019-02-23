@@ -32,9 +32,16 @@ git filter-branch -f --tree-filter 'find -E . -type f -regex ".*\.(xml|g|gz|gd|g
 
 ## Remove CVS leftovers
 
+TODO: should filter-branch to rewrite `\$Id:[^$]*\$` to `\$Id:\$` or so
+to get rid of pointless diffs
+
 git ls-files | xargs sed -i -e '/\$Id/d'
 git ls-files | xargs sed -i -e '/^Revision\.(/d'
 git commit -a -m "Remove CVS leftovers" 
+
+git ls-files | xargs sed -i -e 's;\$Id[^$]*;\$Id;'
+
+git filter-branch -f --tree-filter "git ls-files | xargs sed -i -e 's;\\\$Id[^$]*;\\\$Id;'" -- --all
 
 
 ## change line endings
