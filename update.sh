@@ -2,7 +2,7 @@
 set -e
 
 start=$PWD
-find . -mindepth 2 -maxdepth 3 -name .git -execdir bash -c \
+find -s . -mindepth 2 -maxdepth 3 -name .git -execdir bash -c \
     '
     dir=${PWD#'"$start/"'}
     ref=$(git symbolic-ref --short HEAD)
@@ -13,6 +13,8 @@ find . -mindepth 2 -maxdepth 3 -name .git -execdir bash -c \
       [ ${ref} = master ] || echo -e "\e[31mWarning, expected to be on branch master\e[0m"
     fi
     git pull --ff-only || echo -e "\e[31mAn error occurred while pulling\e[0m"
+    #git fetch fingolfin || git remote rm fingolfin
+    #git obsolete fingolfin master || :
     echo
     ' \;
 
